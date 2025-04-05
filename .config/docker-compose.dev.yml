@@ -1,0 +1,10 @@
+services:
+  db:
+    build:
+      context: ../../dev/database
+    container_name: ${PROJECT_NAME:-golang-template}-db
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-postgres}
+      POSTGRES_HOST: ${DATABASE_ADDRESS:-localhost}
+      POSTGRES_DB: ${DATABASE_DBNAME:-golang-template}

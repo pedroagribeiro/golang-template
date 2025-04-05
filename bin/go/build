@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
+
+# shellcheck source=../scripts/helpers.sh
+. ../scripts/helpers.sh
+# shellcheck source=../scripts/logging.sh
+. ../scripts/logging.sh
+# shellcheck source=../scripts/utils.sh
+. ../scripts/utils.sh
+
+PROGRAM=$(basename "${BASH_SOURCE[0]:-$0}")
+VERSION=0.0.1
+
+function display_help() {
+  cat <<EOF
+  This is a tool to help you create a binary from this project.
+
+  $(help_title_section Usage)
+    ${PROGRAM} [options]
+
+  $(help_title_section Options)
+    -h --help         Show this screen.
+    -v --version      Show version.
+    -o --output       Output file name. Default is incidenthub.
+
+EOF
+}
+
+OUTPUT_FILE='golang-template'
+
+case ${1:---unknown} in
+  -h | --help)
+    display_help $@
+    ;;
+  -v | --version)
+    display_version "${VERSION}" "${PROGRAM}"
+    ;;
+  -o | --output)
+    shift
+    OUTPUT_FILE=${1:-incidenthub}
+    ../bin/gow build -o ../../${OUTPUT_FILE}
+    ;;
+  *)
+    ../bin/gow build -o ../../${OUTPUT_FILE}
+    ;;
+esac
